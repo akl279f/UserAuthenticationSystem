@@ -1,2 +1,17 @@
-﻿<h2>Welcome, @ViewBag.User</h2>
-<a asp-action="Logout">Logout</a>
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2>Welcome to your Dashboard</h2>
+
+@if (ViewBag.User != null)
+{
+    <p>Hello, @ViewBag.User!</p>
+    <form asp-action="Logout" method="post">
+        <button type="submit" class="btn btn-secondary">Logout</button>
+    </form>
+}
+else
+{
+    <p>You are not logged in.</p>
+}

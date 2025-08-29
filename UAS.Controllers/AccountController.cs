@@ -22,15 +22,16 @@ namespace UAS.Controllers
             _context = context;
         }
 
-        // 🔹 Registration Page
+        // Registration Page (GET)
         public IActionResult Register() => View();
 
+        // Registration Page (POST)
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
-            // Check email
+            // Check if email already exists
             if (await _context.Users.AnyAsync(u => u.Email == model.Email))
             {
                 ModelState.AddModelError("", "Email already exists");
@@ -50,9 +51,10 @@ namespace UAS.Controllers
             return RedirectToAction("Login");
         }
 
-        // 🔹 Login Page
+        // Login Page (GET)
         public IActionResult Login() => View();
 
+        // Login Page (POST)
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
@@ -65,12 +67,13 @@ namespace UAS.Controllers
                 return View(model);
             }
 
-            // Session / Cookie auth (simple)
+            // Simple session authentication
             HttpContext.Session.SetString("User", user.Email);
 
             return RedirectToAction("Dashboard");
         }
 
+        // Dashboard Page
         public IActionResult Dashboard()
         {
             var user = HttpContext.Session.GetString("User");
@@ -80,13 +83,14 @@ namespace UAS.Controllers
             return View();
         }
 
+        // Logout
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
 
-        // 🔹 Password Hashing
+        // Password Hashing
         private string HashPassword(string password)
         {
             using var sha256 = SHA256.Create();
